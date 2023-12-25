@@ -102,7 +102,3 @@ try:
 
 except CyclicDependencyError as e:
     print("We've got cycle", e.chain)
-
-
-
-# now we have to path according to the list
