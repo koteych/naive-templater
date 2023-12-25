@@ -74,26 +74,32 @@ try:
     for file in filelist:
         detect_cycles_for_file('Folder 2/File 2-1')
 
-        def dependency_comparator(a, b):
-            adeps = get_dependencies_of_file(a)
-            bdeps = get_dependencies_of_file(b)
 
-            for dep in adeps:
-                if dep == b:
-                    return 1
-                
-            for dep in bdeps:
-                if dep == a:
-                    return -1
+    def dependency_comparator(a, b):
+        adeps = get_dependencies_of_file(a)
+        bdeps = get_dependencies_of_file(b)
 
-            return 0
+        for dep in adeps:
+            if dep == b:
+                return 1
+            
+        for dep in bdeps:
+            if dep == a:
+                return -1
 
-        # first file has no dependencies
-        filelist_sorted = sorted(filelist, key=cmp_to_key(dependency_comparator))
+        return 0
 
-        print(filelist_sorted)
+    # first file has no dependencies
+    filelist_sorted = sorted(filelist, key=cmp_to_key(dependency_comparator))
 
-        # now we have to patch according to the list
+    print("\n")
+    print("We're looking for this list")
+    print(filelist_sorted)
+
+
 except CyclicDependencyError as e:
     print("We've got cycle", e.chain)
 
+
+
+# now we have to path according to the list
