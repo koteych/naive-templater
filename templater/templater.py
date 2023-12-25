@@ -1,5 +1,6 @@
 import os
 import re
+from functools import cmp_to_key
 
 rootpath = '../folder_structures/1'
 filelist = []
@@ -46,6 +47,8 @@ for path in filelist:
 
 filelist = _filelist # this is ours file list
 
+print(filelist)
+
 detection_chain = []
 def detect_cycles_for_file(rootfile):
     def recursion_helper(file):
@@ -71,6 +74,26 @@ try:
     for file in filelist:
         detect_cycles_for_file('Folder 2/File 2-1')
 
-    # no cycles, we can continue and sort the list
+        def dependency_comparator(a, b):
+            adeps = get_dependencies_of_file(a)
+            bdeps = get_dependencies_of_file(b)
+
+            for dep in adeps:
+                if dep == b:
+                    return 1
+                
+            for dep in bdeps:
+                if dep == a:
+                    return -1
+
+            return 0
+
+        # first file has no dependencies
+        filelist_sorted = sorted(filelist, key=cmp_to_key(dependency_comparator))
+
+        print(filelist_sorted)
+
+        # now we have to patch according to the list
 except CyclicDependencyError as e:
     print("We've got cycle", e.chain)
+
