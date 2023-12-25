@@ -1,8 +1,11 @@
 import os
 import re
+import sys
 from functools import cmp_to_key
 
 rootpath = '../folder_structures/1'
+rootpath = sys.argv[1]
+
 filelist = []
 
 class CyclicDependencyError(Exception):
