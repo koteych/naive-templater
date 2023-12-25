@@ -52,21 +52,29 @@ filelist = _filelist # this is ours file list
 
 print(filelist)
 
-detection_chain = []
 def detect_cycles_for_file(rootfile):
+    detection_chain = []
+    traversion_rates = {}
+
+    for file in filelist:
+        traversion_rates[file] = 0
+
     def recursion_helper(file):
         print('Analyzing file: ' + file)
+
+        traversion_rates[file] += 1
+
         detection_chain.append(file)
         deps = get_dependencies_of_file(file)
 
         if len(deps) == 0:
             return
         
-        for dep in deps:
-            if dep == rootfile:
-                print('Cycle detected: ' + str(detection_chain))
-                raise CyclicDependencyError(detection_chain)
-            
+        if traversion_rates[file] > 1:
+            raise CyclicDependencyError(detection_chain)
+            return
+        
+        for dep in deps:            
             recursion_helper(dep)
 
     recursion_helper(rootfile)
@@ -75,7 +83,8 @@ def detect_cycles_for_file(rootfile):
 
 try:
     for file in filelist:
-        detect_cycles_for_file('Folder 2/File 2-1')
+        print('-', file)
+        detect_cycles_for_file(file)
 
 
     def dependency_comparator(a, b):
